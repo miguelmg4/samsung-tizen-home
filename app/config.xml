@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns="http://www.w3.org/ns/widgets"
+        xmlns:tizen="http://tizen.org/ns/widgets"
+        id="http://mi-inicio.local/home"
+        version="1.0.0"
+        viewmodes="maximized">
+    <tizen:application id="MiInicioTV.Home"
+                       package="MiInicioTV"
+                       required_version="2.4"/>
+    <access origin="*" subdomains="true"/>
+    <name>Mi Inicio</name>
+    <author>Mi Inicio contributors</author>
+    <content src="index.html"/>
+    <icon src="icon.png"/>
+    <tizen:profile name="tv"/>
+
+    <!-- Lanzar otras apps (YouTube, Prime, etc.) y leer sus iconos -->
+    <tizen:privilege name="http://tizen.org/privilege/application.launch"/>
+    <tizen:privilege name="http://tizen.org/privilege/application.info"/>
+    <!-- Teclas de color / volver del mando -->
+    <tizen:privilege name="http://tizen.org/privilege/tv.inputdevice"/>
+    <!-- Cambiar a TDT / HDMI (consolas) -->
+    <tizen:privilege name="http://tizen.org/privilege/tv.window"/>
+    <tizen:privilege name="http://tizen.org/privilege/tv.channel"/>
+    <tizen:privilege name="http://tizen.org/privilege/tv.audio"/>
+    <tizen:privilege name="http://tizen.org/privilege/internet"/>
+
+    <tizen:privilege name="http://developer.samsung.com/privilege/productinfo"/>
+    <!-- La tele la tiene cargada en segundo plano: se abre al instante -->
+    <tizen:metadata key="http://samsung.com/tv/metadata/prelaunch.support" value="true"/>
+    <feature name="http://tizen.org/feature/screen.size.all"/>
+    <tizen:setting screen-orientation="landscape"
+                   context-menu="disable"
+                   background-support="disable"
+                   encryption="disable"
+                   hwkey-event="enable"/>
+</widget>

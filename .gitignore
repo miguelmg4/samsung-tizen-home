@@ -1,0 +1,17 @@
+# Compilación y firma (nunca subir certificados ni paquetes firmados)
+.buildResult/
+*.wgt
+*.p12
+*.pem
+author.p12
+distributor.p12
+# Datos de TU tele generados por las herramientas avanzadas
+tv-home-backup.tgz
+debloat-disabled.txt
+# Binarios .NET compilados (se generan con tools/build-helpers.sh)
+tools/vendor/samsung-tv-root/samsung_tv_root/payloads/
+tools/home-routing/out/
+**/obj/
+**/bin/
+__pycache__/
+.DS_Store

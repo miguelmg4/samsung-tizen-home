@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- 3.1 + RollForward=Major: funciona en teles con .NET Core 3.1 (2021-2022) y con .NET 6+ (2023+) -->
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RollForward>Major</RollForward>
+    <OutputType>Exe</OutputType>
+    <UseAppHost>false</UseAppHost>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+</Project>
