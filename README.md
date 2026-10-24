@@ -57,7 +57,7 @@ En Tizen Studio: **Tools → Certificate Manager → +** → perfil **Samsung**,
 ### 4. Instalar Mi Inicio
 
 ```sh
-git clone https://github.com/<tu-usuario>/samsung-tizen-home.git
+git clone https://github.com/miguelmg4/samsung-tizen-home.git
 cd samsung-tizen-home
 TV_IP=192.168.1.50 CERT_PROFILE=MiPerfil ./deploy.sh
 ```
