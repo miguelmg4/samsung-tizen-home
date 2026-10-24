@@ -18,7 +18,7 @@ Una pantalla de inicio limpia, rápida y personalizable para televisores Samsung
 - **Tiempo**: AEMET para ciudades españolas (sin clave) y Open-Meteo para el resto o en modo automático por IP.
 - **Centro de control** (botón **rojo**, o subir a la píldora de arriba a la derecha): previsión por horas, salvapantallas, fondo, entradas y ajustes.
 - **Ajustes** (icono de la rejilla o botón **azul**): salvapantallas, fondo, tiempo, apps visibles, puertos HDMI, volumen y accesos directos a los paneles de Samsung (imagen y sonido, wifi, Bluetooth, compartir pantalla…).
-- **Salvapantallas** con fotos en movimiento que protege el OLED (por defecto a los 30 minutos). Mientras Mi Inicio está abierto, pide a la tele que no use el de Samsung.
+- **Salvapantallas** en movimiento que protege el OLED (por defecto a los 30 minutos), con imágenes de la NASA de fondo casi negro que en OLED gastan menos, o paisajes. Mientras Mi Inicio está abierto, pide a la tele que no use el de Samsung.
 - **Ligera**: pensada para el Chromium 85 de Tizen 6.5; animaciones solo con `transform`/`opacity`.
 
 ## Compatibilidad

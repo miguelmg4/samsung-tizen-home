@@ -179,11 +179,11 @@
   @keyframes kb2 { from { transform:scale(1.14) translate(-40px,20px); } to { transform:scale(1.02) translate(0,0); } }
   @keyframes kb3 { from { transform:scale(1.04) translate(40px,0); } to { transform:scale(1.15) translate(-30px,10px); } }
   @keyframes kb4 { from { transform:scale(1.15) translate(30px,-20px); } to { transform:scale(1.03) translate(-20px,0); } }
-  #sInfo { position:absolute; top:70px; right:90px; text-align:right; text-shadow:0 2px 20px rgba(0,0,0,.5); }
+  #sInfo { position:absolute; top:70px; right:90px; text-align:right; text-shadow:0 2px 20px rgba(0,0,0,.5); color:rgba(255,255,255,.78); }
   #sInfo .t { font-size:96px; font-weight:300; letter-spacing:-2px; line-height:1; }
   #sInfo .w { font-size:30px; margin-top:10px; display:flex; align-items:center; justify-content:flex-end; }
   #sInfo .w svg { margin-right:10px; }
-  #sCred { position:absolute; left:80px; bottom:60px; font-size:24px; color:rgba(255,255,255,.75); text-shadow:0 2px 12px rgba(0,0,0,.6); }
+  #sCred { position:absolute; left:80px; bottom:60px; font-size:24px; color:rgba(255,255,255,.5); text-shadow:0 2px 12px rgba(0,0,0,.6); }
 </style>
 </head>
 <body>
@@ -256,7 +256,7 @@ function G(name, s){
 function small(svg, s){ return svg.replace(/width="\d+" height="\d+"/, 'width="'+s+'" height="'+s+'"'); }
 
 // ======================= CONFIGURACIÓN =======================
-var VERSION = '1.0';
+var VERSION = '1.1';
 var BRAND = {
   'org.tizen.netflix-app':        { bg:'#000', svg:'netflix' },
   'org.tizen.primevideo':         { bg:'linear-gradient(135deg,#0f79af,#1a98ff)', svg:'prime', noIcon:true },
@@ -297,6 +297,8 @@ var PHOTOS = [["p28","Jerry Adney"],["p29","Go Wild"],["p110","Kenneth Thewissen
   ["p381","Nick West"],["p412","Samuel Rohl"],["p434","Ales Krivec"],["p443","Tim Mossholder"],["p450","Tanvi Malik"],["p456","Matteo Minelli"],
   ["p477","Jasper van der Meij"],["p482","Danny Froese"],["p483","Paulo Simões Mendes"],["p516","Owen Walters"],["p519","Alexandr Schwarz"],["p525","Luca Zanon"]];
 // [nombre, lat, lon, código de municipio de AEMET]
+// Salvapantallas para OLED: imágenes de la NASA (dominio público) con fondo casi negro; [archivo, id de NASA]
+var SPACE = [["s01", "iss072e159172"], ["s02", "iss042e033478"], ["s03", "iss067e302248"], ["s04", "iss069e091732"], ["s05", "iss070e062746"], ["s06", "GSFC_20171208_Archive_e000053"], ["s07", "PIA15658"], ["s08", "PIA09178"], ["s10", "PIA25163"], ["s11", "PIA14934"], ["s12", "GSFC_20171208_Archive_e000637"], ["s13", "iss029e007473"]];
 var CITIES = [['Madrid',40.4165,-3.7026,'28079'],['Barcelona',41.3888,2.159,'08019'],['Valencia',39.4697,-0.3774,'46250'],
   ['Sevilla',37.3828,-5.9732,'41091'],['Zaragoza',41.6561,-0.8773,'50297'],['Málaga',36.7202,-4.4203,'29067'],['Murcia',37.987,-1.13,'30030'],
   ['Palma',39.5694,2.65,'07040'],['Las Palmas',28.0997,-15.4134,'35016'],['Bilbao',43.2627,-2.9253,'48020'],['Alicante',38.3452,-0.481,'03014'],
@@ -317,6 +319,7 @@ function pad(x){ return (x<10?'0':'')+x; }
 var S = {
   order: load('order', DEFAULT_ORDER.slice()), hidden: load('hidden', DEFAULT_HIDDEN.slice()),
   saver: load('saver', 30),           // minutos (0 = nunca)
+  saverSet: load('saverSet', 'space'), // imágenes del salvapantallas: 'space' | 'landscape' | 'mix'
   photoEvery: load('photoEvery', 60), // minutos (0 = nunca cambia, -1 = cada día)
   photo: load('photo', -1),           // foto fija elegida (-1 = rotación)
   city: load('city', null),           // null = automática por IP
@@ -816,10 +819,13 @@ function choice(title, icon, cap, opts, get, set){
   }) }] };
 }
 function saverPage(){
-  return { title:'Salvapantallas', icon:bigG('saver'), cap:'Fotos de paisajes en movimiento.<br>Protege la pantalla OLED de marcas.', groups:[
+  return { title:'Salvapantallas', icon:bigG('saver'), cap:'Imágenes en movimiento lento.<br>Protege la pantalla OLED de marcas.', groups:[
     { rows:[ { l:'Iniciar tras', v:function(){ return S.saver ? S.saver+' minutos' : 'Nunca'; }, page:function(){
         return choice('Iniciar tras', bigG('saver'), '', [[0,'Nunca'],[5,'5 minutos'],[10,'10 minutos'],[15,'15 minutos'],[30,'30 minutos'],[60,'1 hora']],
           function(){ return S.saver; }, function(v){ S.saver = v; bumpIdle(); applySamsungSaver(); }); } },
+      { l:'Imágenes', v:function(){ return { space:'Espacio (OLED)', landscape:'Paisajes', mix:'Las dos' }[S.saverSet]; }, page:function(){
+        return choice('Imágenes', bigG('photo'), 'Espacio: fondos negros que en OLED<br>apagan los píxeles y gastan menos.', [['space','Espacio (OLED)'],['landscape','Paisajes'],['mix','Las dos']],
+          function(){ return S.saverSet; }, function(v){ S.saverSet = v; }); } },
       { l:'Ver ahora', ok:function(){ closeSettings(); saverOn(); } } ]},
     { h:'Salvapantallas de Samsung', rows:[
       { l:'Usar el de Samsung en Mi Inicio', v:function(){ return S.samsungSaver ? 'Sí' : (S.saver ? 'No' : 'Sí (el de Mi Inicio está en Nunca)'); },
@@ -891,7 +897,7 @@ function infoPage(){
   var r = function(l, v){ return { l:l, v:function(){ return v; }, info:true }; };
   return { title:'Información', icon:bigG('info'), cap:'', groups:[
     { rows:[ r('Modelo', MODEL || '—'), r('Sistema', 'Tizen '+(PLATFORM || '—')), r('Mi Inicio', VERSION),
-      r('Apps', (Object.keys(ITEMS).length - INPUTS.length - 1)+' instaladas'), r('Tiempo', 'AEMET · Open-Meteo') ]},
+      r('Apps', (Object.keys(ITEMS).length - INPUTS.length - 1)+' instaladas'), r('Tiempo', 'AEMET · Open-Meteo'), r('Salvapantallas', 'Imágenes de la NASA') ]},
     { h:'Fotos (Unsplash)', rows: PHOTOS.map(function(p, i){ return { l:p[1], thumb:photoThumb(i), info:true }; }) }
   ]};
 }
@@ -1012,11 +1018,20 @@ function saverOn(){
   if(document.hidden){ bumpIdle(); return; }
   saverIsOn = true; clearTimeout(idleT);
   closeMenu(); if(moving) endMove();
-  svIdx = photoIdx; saverNext(); panelShow($('saver'));
+  svIdx = Math.floor(Math.random() * saverList().length); saverNext(); panelShow($('saver'));
   saverT = setInterval(saverNext, 30000);
 }
+// Lista de imágenes según el ajuste: [url, crédito]
+function saverList(){
+  var space = SPACE.map(function(x){ return ['photos/space/'+x[0]+'.jpg', 'Imagen: NASA']; });
+  var land = PHOTOS.map(function(x, i){ return [photoURL(i), 'Foto de '+x[1]+' · Unsplash']; });
+  if(S.saverSet === 'landscape') return land;
+  if(S.saverSet === 'mix'){ var m = []; for(var i=0; i<Math.max(space.length, land.length); i++){ if(space[i]) m.push(space[i]); if(land[i]) m.push(land[i]); } return m; }
+  return space;
+}
 function saverNext(){
-  svIdx = (svIdx + 1) % PHOTOS.length;
+  var list = saverList();
+  svIdx = (svIdx + 1) % list.length;
   var next = svLayer ? $('svA') : $('svB'), prev = svLayer ? $('svB') : $('svA'), img = new Image(), idx = svIdx;
   img.onload = function(){
     if(!saverIsOn) return;
@@ -1029,9 +1044,9 @@ function saverNext(){
     var i = $('sInfo'), c = $('sCred');
     i.style.right = svCorner ? '90px' : 'auto'; i.style.left = svCorner ? 'auto' : '90px';
     i.style.textAlign = svCorner ? 'right' : 'left'; $('sW').style.justifyContent = svCorner ? 'flex-end' : 'flex-start';
-    c.textContent = 'Foto de '+PHOTOS[idx][1]+' · Unsplash'; c.style.left = svCorner ? '80px' : 'auto'; c.style.right = svCorner ? 'auto' : '80px';
+    c.textContent = list[idx][1]; c.style.left = svCorner ? '80px' : 'auto'; c.style.right = svCorner ? 'auto' : '80px';
   };
-  img.src = photoURL(svIdx);
+  img.src = list[svIdx][0];
 }
 function saverOff(){
   saverIsOn = false; panelHide($('saver'), 1500); clearInterval(saverT); bumpIdle(); checkPhoto();
@@ -1118,6 +1133,8 @@ loadApps(build);
 paintWeather(); refreshWeather();
 refreshSources(); bumpIdle();
 setInterval(refreshSources, 20000);
+// La tele puede olvidar la orden: se repite cada minuto mientras Mi Inicio está a la vista
+setInterval(function(){ if(!document.hidden) applySamsungSaver(); }, 60000);
 setInterval(function(){ refreshWeather(); if(!saverIsOn) checkPhoto(); }, 5*60000);
 </script>
 </body>

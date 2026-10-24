@@ -14,6 +14,12 @@ echo ">> Firmando con el perfil $CERT_PROFILE…"
 tizen package -t wgt -s "$CERT_PROFILE" -- "$OUT" >/dev/null
 WGT="$(ls "$OUT"/*.wgt | head -1)"; cp "$WGT" "$OUT/MiInicio.wgt"
 echo ">> Instalando…"
-tizen install -n MiInicio.wgt -s "$TV_IP:26101" -- "$OUT" | grep -iE 'completed|successfully|fail'
+# La instalación se cuelga si la conexión sdb se cae: límite de 90 s y un reintento tras reiniciar sdb
+install(){ perl -e 'alarm 90; exec @ARGV' tizen install -n MiInicio.wgt -s "$TV_IP:26101" -- "$OUT" 2>&1 | grep -iE 'completed|successfully|fail'; }
+if ! install; then
+  echo ">> La instalación no respondió; reiniciando sdb y reintentando…"
+  sdb kill-server >/dev/null 2>&1; sleep 1; sdb start-server >/dev/null 2>&1; sdb connect "$TV_IP:26101" >/dev/null
+  install
+fi
 echo ">> Abriendo…"
 tizen run -p "$APP_ID" -s "$TV_IP:26101" | grep -iE 'launched|fail'

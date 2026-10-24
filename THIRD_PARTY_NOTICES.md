@@ -63,6 +63,10 @@ Las 22 fotos de `app/photos/` son de [Unsplash](https://unsplash.com/license), o
 - Alexandr Schwarz (p519.jpg)
 - Luca Zanon (p525.jpg)
 
+## Imágenes del salvapantallas (NASA, dominio público)
+
+`app/photos/space/`: imágenes de la [NASA Image and Video Library](https://images.nasa.gov) (las imágenes de la NASA no tienen copyright; se citan como «NASA»). Identificadores: iss072e159172, iss042e033478, iss067e302248, iss069e091732, iss070e062746, GSFC_20171208_Archive_e000053, PIA15658, PIA09178, PIA25163, PIA14934, GSFC_20171208_Archive_e000637, iss029e007473.
+
 ## Datos
 
 - Tiempo: [AEMET](https://www.aemet.es) (© AEMET, uso autorizado citando la fuente) y [Open-Meteo](https://open-meteo.com) (CC BY 4.0).
