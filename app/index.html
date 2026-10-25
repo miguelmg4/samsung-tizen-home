@@ -227,6 +227,7 @@ var SVG = {
   netflix: '<svg width="62" height="100" viewBox="0 0 60 96"><path d="M0 0h16l28 72V0h16v96H44L16 24v72H0z" fill="#e50914"/></svg>',
   'switch': '<svg width="96" height="96" viewBox="0 0 100 100"><path d="M44 8 H30 A22 22 0 0 0 8 30 V70 A22 22 0 0 0 30 92 H44 Z" fill="none" stroke="#fff" stroke-width="7"/><circle cx="28" cy="32" r="8" fill="#fff"/><path d="M56 8 H70 A22 22 0 0 1 92 30 V70 A22 22 0 0 1 70 92 H56 Z" fill="#fff"/><circle cx="72" cy="60" r="8" fill="#e60012"/></svg>',
   xbox: '<svg width="96" height="96" viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="#fff"/><path d="M22 22 Q50 40 78 78 M78 22 Q50 40 22 78" stroke="#107c10" stroke-width="12" fill="none" stroke-linecap="round"/></svg>',
+  store: '<svg width="96" height="96" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg>',
   gear: '<svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>'
 };
 // Glifos de línea (menús, centro de control, ajustes); heredan el color con stroke="currentColor"
@@ -256,7 +257,7 @@ function G(name, s){
 function small(svg, s){ return svg.replace(/width="\d+" height="\d+"/, 'width="'+s+'" height="'+s+'"'); }
 
 // ======================= CONFIGURACIÓN =======================
-var VERSION = '1.1';
+var VERSION = '1.2';
 var BRAND = {
   'org.tizen.netflix-app':        { bg:'#000', svg:'netflix' },
   'org.tizen.primevideo':         { bg:'linear-gradient(135deg,#0f79af,#1a98ff)', svg:'prime', noIcon:true },
@@ -271,13 +272,14 @@ var BRAND = {
   'ubrNshqKcU.ALaCarta':          { bg:'#fff' },
   'BTqpJutesE.Mitele':            { bg:'#1b1d3a' },
   'org.tizen.browser':            { bg:'linear-gradient(135deg,#1f6feb,#58a6ff)' },
-  'xvvl3S1bvH.TizenBrewStandalone': { bg:'#1c1c28' }
+  'xvvl3S1bvH.TizenBrewStandalone': { bg:'#1c1c28' },
+  'org.volt.apps':                { bg:'linear-gradient(135deg,#1428a0,#4c6ef5)', svg:'store', noIcon:true }
 };
 var KNOWN = [['org.tizen.netflix-app','Netflix'],['org.tizen.primevideo','Prime Video'],['com.samsung.tv.aria-video','Apple TV'],
   ['9Ur5IzDKqV.TizenYouTube','YouTube'],['rJeHak5zRg.Spotify','Spotify'],['GHI3a0zMSx.XboxGamePass','Xbox Game Pass'],['IkWsFHtOY9.Stremio','Stremio'],
   ['OGLLvqej7u.CrunchyrollWebApp','Crunchyroll'],['yu1NM3vHsU.DAZN','DAZN'],['Jz7aUrV2Q4.Twitch','Twitch'],
   ['ubrNshqKcU.ALaCarta','RTVE Play'],['BTqpJutesE.Mitele','Mediaset Infinity'],
-  ['org.tizen.browser','Navegador'],['xvvl3S1bvH.TizenBrewStandalone','TizenBrew']];
+  ['org.tizen.browser','Navegador'],['xvvl3S1bvH.TizenBrewStandalone','TizenBrew'],['org.volt.apps','Tienda de apps']];
 var INPUTS = [
   { key:'in:tv', name:'TV', svg:'tv', bg:'linear-gradient(135deg,#0b2a8a,#2f5bff)', source:{type:'TV'} },
   { key:'in:switch', name:'Nintendo Switch', svg:'switch', bg:'linear-gradient(135deg,#d7101b,#ff3b3b)', cec:/nintendo|switch/i, source:{type:'HDMI', number:1} },
@@ -772,11 +774,10 @@ function rootPage(){
     { h:'Televisor', rows:[
       { l:'Volumen', adj:true, v:function(){ return volGet(); }, left:function(){ volStep(-1); }, right:function(){ volStep(1); } },
       { l:'Silenciar', v:function(){ return muteGet() ? 'Sí' : 'No'; }, ok:muteToggle },
-      native('Modo de imagen y sonido', 'com.samsung.tv.quickpanel', 'Ajustes rápidos'),
-      native('Wi-Fi y red', 'com.samsung.tv.coba.setting.networksettings'),
-      native('Bluetooth', 'com.samsung.tv.coba.setting.btspeakerlist', 'Altavoces y auriculares'),
-      native('Dispositivos conectados', 'com.samsung.tv.coba.setting.devicemanager'),
-      native('Compartir pantalla', 'org.tizen.ScreenMirroring-app-tv', 'Smart View'),
+      native('Modo de imagen y sonido', 'org.tizen.menu', 'Ajustes de Samsung'),
+      native('Wi-Fi y red', 'org.tizen.NetworkSetting-Tizen', 'Configurar red'),
+      native('Bluetooth', 'org.tizen.btaudiolist', 'Dispositivos Bluetooth'),
+      { l:'Compartir pantalla: Android › Smart View · iPhone › AirPlay · Windows › Win+K', info:true },
       native('Cuidado del dispositivo', 'com.samsung.TVDeviceCare', 'Liberar memoria'),
       native('Todos los ajustes de Samsung', 'org.tizen.menu') ]},
     { h:'Sistema', rows:[ { l:'Abrir al encender la tele', page:bootPage }, { l:'Información', page:infoPage } ]}
@@ -1107,7 +1108,8 @@ document.addEventListener('keyup', function(e){
   okT = null;
 });
 document.addEventListener('visibilitychange', function(){
-  if(document.hidden) return;
+  // Al pasar a segundo plano se quita ya la animación de apertura, para que no se vea al volver
+  if(document.hidden){ var l = $('launch'); l.style.transition = 'none'; l.classList.remove('on'); l.offsetWidth; l.style.transition = ''; clearTimeout(launchT); return; }
   launchDone(); applySamsungSaver(); rememberChannel();
   refreshSources(); bumpIdle(); checkPhoto(); refreshWeather();
   loadApps(build);   // por si se ha instalado o desinstalado alguna app

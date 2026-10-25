@@ -13,11 +13,11 @@ Una pantalla de inicio limpia, rápida y personalizable para televisores Samsung
 ## Qué incluye
 
 - **Inicio estilo tvOS**: foto de paisaje a pantalla completa, fila superior sobre una plataforma de cristal, rejilla de 6 columnas con el nombre bajo la app enfocada y fondo difuminado al bajar.
-- **Tus apps reales**, con su icono oficial, detectadas solas. Puedes mover, ocultar u ordenar apps (mantén **OK** o pulsa el botón **amarillo**).
+- **Tus apps reales**, con su icono oficial, detectadas solas, y la **tienda de apps de Samsung** como un icono más. Puedes mover, ocultar u ordenar apps (mantén **OK** o pulsa el botón **amarillo**).
 - **Entradas**: TDT (sintoniza un canal de antena, no Samsung TV Plus), Nintendo Switch y Xbox. El puerto HDMI se detecta por HDMI-CEC o se elige en Ajustes.
 - **Tiempo**: AEMET para ciudades españolas (sin clave) y Open-Meteo para el resto o en modo automático por IP.
 - **Centro de control** (botón **rojo**, o subir a la píldora de arriba a la derecha): previsión por horas, salvapantallas, fondo, entradas y ajustes.
-- **Ajustes** (icono de la rejilla o botón **azul**): salvapantallas, fondo, tiempo, apps visibles, puertos HDMI, volumen y accesos directos a los paneles de Samsung (imagen y sonido, wifi, Bluetooth, compartir pantalla…).
+- **Ajustes** (icono de la rejilla o botón **azul**): salvapantallas, fondo, tiempo, apps visibles, puertos HDMI, volumen y accesos directos a los paneles de Samsung: imagen y sonido, configuración de red (wifi) y dispositivos Bluetooth.
 - **Salvapantallas** en movimiento que protege el OLED (por defecto a los 30 minutos), con imágenes de la NASA de fondo casi negro que en OLED gastan menos, o paisajes. Mientras Mi Inicio está abierto, pide a la tele que no use el de Samsung.
 - **Ligera**: pensada para el Chromium 85 de Tizen 6.5; animaciones solo con `transform`/`opacity`.
 
@@ -94,15 +94,17 @@ Todo está en `app/index.html`, en el bloque `CONFIGURACIÓN`:
 
 Requisitos extra: **Python 3.9+** y el **SDK de .NET 6** ([descarga](https://dotnet.microsoft.com/download/dotnet/6.0), o `dotnet-install.sh --channel 6.0`). Los scripts compilan solos los ayudantes la primera vez (`tools/build-helpers.sh`).
 
-### Que el botón Home abra Mi Inicio (y al encender)
+### Que el botón Home y el botón Volver lleven a Mi Inicio (y al encender)
 
 ```sh
 TV_IP=192.168.1.50 bash set-home.sh
 ```
 
+Cambia dos ajustes distintos de la tele: el destino del botón **Home** (`operation/main`) y la **app de inicio del sistema** (`db/appfw/home_appid`), que es a donde vuelve la tele al salir de una app con **Volver**.
+
 Después, en la tele: *Ajustes → General → Funciones Smart →* activa **«Ejecutar Smart Hub»** para que se abra al encender.
 
-**Volver al Home de Samsung** (¡siempre antes de desinstalar Mi Inicio!):
+**Volver al inicio de Samsung** (deshace los dos ajustes; ¡siempre antes de desinstalar Mi Inicio!):
 
 ```sh
 TV_IP=192.168.1.50 bash set-home.sh stock
@@ -124,7 +126,7 @@ Grupos: `ads`, `tracking`, `promo`, `alexa`, `health`, `smartthings`, `art`, `bi
 
 ## Limitaciones conocidas
 
-- Sin root, el botón Home siempre abre el inicio de Samsung.
+- Sin root, el botón Home y la salida de las apps llevan al inicio de Samsung.
 - Samsung no deja a las apps cambiar el modo de imagen, el wifi o el Bluetooth: Ajustes abre los paneles originales de Samsung.
 - La app solo controla el salvapantallas de Samsung mientras está abierta.
 - La conexión `sdb` con la tele se cae a menudo; los scripts reconectan solos.
