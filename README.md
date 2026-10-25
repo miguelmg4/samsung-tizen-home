@@ -122,7 +122,7 @@ TV_IP=192.168.1.50 bash debloat.sh apply ads,tracking,promo,alexa,smartthings
 TV_IP=192.168.1.50 bash debloat.sh restore           # reactiva lo desactivado
 ```
 
-Grupos: `ads`, `tracking`, `promo`, `alexa`, `health`, `smartthings`, `art`, `bixby` (solo lo exclusivo de Bixby; la voz dentro de apps sigue funcionando), `applevideo` (app Apple TV) y `samsunghome` (extras del inicio de Samsung; solo si ya usaste `set-home.sh`). Reinicia la tele después de aplicar.
+Grupos: `ads`, `tracking`, `promo`, `alexa`, `health`, `smartthings`, `art`, `bixby` (solo lo exclusivo de Bixby; no probado con la búsqueda por voz de las apps), `applevideo` (app Apple TV) y `samsunghome` (extras del inicio de Samsung; solo si ya usaste `set-home.sh`). Reinicia la tele después de aplicar.
 
 ## Limitaciones conocidas
 

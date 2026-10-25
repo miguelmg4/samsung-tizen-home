@@ -73,7 +73,7 @@ GROUPS = {
         "org.tizen.art-app": "modo Arte",
         "com.samsung.tv.ambient-support": "modo Ambiente",
     },
-    # Solo partes exclusivas de Bixby: la voz dentro de apps (p. ej. buscar en YouTube) sigue funcionando
+    # Solo partes exclusivas de Bixby (no se ha comprobado su efecto en la búsqueda por voz de las apps)
     "bixby": {
         "com.samsung.tv.farfieldvoice": "micro manos libres «Hi Bixby»",
         "com.samsung.tv.bixby-prov": "configuración de Bixby",
