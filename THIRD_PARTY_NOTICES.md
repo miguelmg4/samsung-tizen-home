@@ -2,7 +2,7 @@
 
 ## berteotti/custom-tv (MIT)
 
-`tools/home-routing*`, `tools/tv-root.py`, `tools/extras/backup-tv-state.sh` y la lista base de `tools/debloat.py` derivan de https://github.com/berteotti/custom-tv (commit 3e81631).
+`tools/home-routing*`, `tools/tv-root.py`, `tools/extras/backup-tv-state.sh`, `tools/extras/privacy/services-*.sh` y la lista base de `tools/debloat.py` derivan de https://github.com/berteotti/custom-tv (commit 3e81631).
 
 ```
 MIT License

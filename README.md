@@ -124,6 +124,20 @@ TV_IP=192.168.1.50 bash debloat.sh restore           # reactiva lo desactivado
 
 Grupos: `ads`, `tracking`, `promo`, `alexa`, `health`, `smartthings`, `art`, `bixby` (⚠️ no lo uses si quieres buscar por voz: la búsqueda por voz de apps como YouTube necesita Bixby configurado), `applevideo` (app Apple TV) y `samsunghome` (extras del inicio de Samsung; solo si ya usaste `set-home.sh`). Reinicia la tele después de aplicar.
 
+### Segunda fase: servicios del sistema de anuncios y analítica
+
+Algunos componentes siguen funcionando como servicios del sistema aunque su app esté desactivada (agente de anuncios, PISA, analítica de uso, reconocimiento de contenido, estadísticas `sp-kpi`/`kpi-logging`). En el modelo probado gastaban unos 60 MB.
+
+```sh
+TV_IP=192.168.1.50 bash services.sh status    # solo lectura
+TV_IP=192.168.1.50 bash services.sh apply     # parar y enmascarar
+TV_IP=192.168.1.50 bash services.sh reapply   # tras un reinicio en frío
+TV_IP=192.168.1.50 bash services.sh restore   # deshacer
+```
+
+- El agente de anuncios, PISA y `canalysis` quedan **apagados para siempre**: Samsung incluye un interruptor (un archivo en `/opt/usr/share/systemd/system/`) que les impide arrancar.
+- El resto (reconocimiento de contenido, analítica de medios, `sp-kpi`, `kpi-logging`) solo se para **hasta el siguiente reinicio en frío** (desenchufar la tele); después hay que volver a lanzar `reapply`. Un reposo normal con el mando no los reactiva.
+
 ## Si la búsqueda por voz no funciona
 
 1. **Empareja el mando por Bluetooth**: apúntalo a la tele desde menos de 30 cm y mantén pulsados **VOLVER** y **REPRODUCIR/PAUSA** 3-5 segundos. Sin emparejar, los botones funcionan por infrarrojos pero el micrófono no.
