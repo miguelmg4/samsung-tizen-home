@@ -6,9 +6,9 @@ Una pantalla de inicio limpia, rápida y personalizable para televisores Samsung
 
 ![Inicio](docs/home.jpg)
 
-| Rejilla de apps | Centro de control | Ajustes |
+| Rejilla de apps | Ajustes | Entradas |
 |---|---|---|
-| ![](docs/grid.jpg) | ![](docs/cc.jpg) | ![](docs/settings.jpg) |
+| ![](docs/grid.jpg) | ![](docs/settings.jpg) | ![](docs/inputs.jpg) |
 
 ## Qué incluye
 
@@ -16,8 +16,8 @@ Una pantalla de inicio limpia, rápida y personalizable para televisores Samsung
 - **Tus apps reales**, con su icono oficial, detectadas solas, y la **tienda de apps de Samsung** como un icono más. Puedes mover, ocultar u ordenar apps (mantén **OK** o pulsa el botón **amarillo**).
 - **Entradas**: TDT (sintoniza un canal de antena, no Samsung TV Plus), Nintendo Switch y Xbox. El puerto HDMI se detecta por HDMI-CEC o se elige en Ajustes.
 - **Tiempo**: AEMET para ciudades españolas (sin clave) y Open-Meteo para el resto o en modo automático por IP.
-- **Centro de control** (botón **rojo**, o subir a la píldora de arriba a la derecha): previsión por horas, salvapantallas, fondo, entradas y ajustes.
-- **Ajustes** (icono de la rejilla o botón **azul**): salvapantallas, fondo, tiempo, apps visibles, puertos HDMI, volumen y accesos directos a los paneles de Samsung: imagen y sonido, configuración de red (wifi) y dispositivos Bluetooth.
+- **Panel de Ajustes** (OK en la píldora del tiempo y la hora, botón **rojo** o **azul**, o el icono de Ajustes): panel lateral de cristal con la hora y el tiempo, accesos rápidos (TV, consolas, silencio, salvapantallas, fondo, salvapantallas de Samsung, imagen y sonido), barra de volumen, memoria y ping de red en vivo, y todos los ajustes: salvapantallas, fondo, tiempo, apps visibles, puertos HDMI y accesos a los paneles de Samsung (imagen y sonido, red/wifi, Bluetooth).
+- **Panel de Entradas** (píldora «Entradas», a la izquierda de la del tiempo): sube desde abajo con todas las entradas de la tele (TV, HDMI…) y las memorias USB. Muestra el nombre del aparato si la tele lo detecta por HDMI-CEC (p. ej. «Xbox · HDMI 2») y cuáles tienen señal.
 - **Salvapantallas** en movimiento que protege el OLED (por defecto a los 30 minutos), con imágenes de la NASA de fondo casi negro que en OLED gastan menos, o paisajes. Mientras Mi Inicio está abierto, pide a la tele que no use el de Samsung.
 - **Ligera**: pensada para el Chromium 85 de Tizen 6.5; animaciones solo con `transform`/`opacity`.
 
@@ -72,8 +72,8 @@ Para actualizar tras cambiar algo, vuelve a ejecutar `./deploy.sh`.
 |---|---|
 | Flechas / OK | Navegar / abrir |
 | Mantener OK o **amarillo** | Menú: abrir, editar pantalla de inicio, mover a la fila superior, ocultar |
-| **Rojo** | Centro de control |
-| **Azul** | Ajustes |
+| **Rojo** / **Azul** | Panel de Ajustes |
+| ▲ en la fila superior | Píldoras «Entradas» y Ajustes (◀ ▶ para elegir) |
 | VOLVER | Subir a la primera fila; en la primera fila, salvapantallas |
 
 En mandos sin teclas de colores (SolarCell), pulsa el botón **123** para ver el mando virtual con colores.
@@ -150,6 +150,8 @@ TV_IP=192.168.1.50 bash services.sh restore   # deshacer
 - Samsung no deja a las apps cambiar el modo de imagen, el wifi o el Bluetooth: Ajustes abre los paneles originales de Samsung.
 - La app solo controla el salvapantallas de Samsung mientras está abierta.
 - La conexión `sdb` con la tele se cae a menudo; los scripts reconectan solos.
+- El explorador de USB de Samsung no se deja abrir desde otra app: en el panel de Entradas, el USB se abre desde el menú de fuentes de Samsung.
+- Mientras Mi Inicio es la app de inicio del sistema (`set-home.sh`), no se puede depurar con el inspector de Chrome; `set-home.sh stock` lo deshace.
 
 ## Desinstalar
 

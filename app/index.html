@@ -41,21 +41,28 @@
   body.inset #shelf { transform:none; }
 
   /* ---------- Píldora superior derecha (tiempo · hora · perfil) ---------- */
-  #pill { position:absolute; right:70px; top:50px; height:64px; border-radius:32px; padding:0 8px 0 24px; display:flex; align-items:center;
-    font-size:27px; font-weight:600; transition:transform .2s var(--ease), background .2s, opacity .35s; z-index:4; }
+  #pills { position:absolute; right:70px; top:50px; display:flex; align-items:center; z-index:4; transition:opacity .35s; }
+  #pill, #inPill { height:64px; border-radius:32px; display:flex; align-items:center;
+    font-size:27px; font-weight:600; transition:transform .2s var(--ease), background .2s, color .2s; }
+  #pill { padding:0 8px 0 24px; }
+  #inPill { padding:0 28px 0 22px; margin-right:18px; }
+  #inPill svg { margin-right:12px; }
+  #inPill.focus { background:rgba(255,255,255,.96); color:#000; transform:scale(1.08); }
   #pill .w { display:flex; align-items:center; margin-right:20px; }
   #pill .w svg { margin-right:8px; }
   #pill .av { width:48px; height:48px; border-radius:50%; margin-left:18px; background:linear-gradient(135deg,#5e5ce6,#bf5af2);
     display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:700; color:#fff; }
   #pill.focus { background:rgba(255,255,255,.96); color:#000; transform:scale(1.08); }
-  body.over #pill { opacity:0; }
+  body.over #pills { opacity:0; }
 
   /* ---------- Rejilla de apps ---------- */
   #page { position:absolute; left:0; top:0; width:1920px; height:1080px; transition:transform .5s var(--ease), opacity .3s; will-change:transform; }
   /* Con Ajustes abierto la pantalla de inicio desaparece; con el Centro de control queda atenuada */
   body.inset #page, body.inset #shelf { opacity:0; }
-  body.incc #page, body.incc #shelf { opacity:.25; }
-  body.deep #pill { opacity:0; }
+  body.insheet #page, body.insheet #shelf { opacity:.3; }
+  /* Las columnas que quedan bajo el panel se ocultan (opacidad de capas ya existentes: no redibuja nada) */
+  body.insheet .tile[data-c="4"], body.insheet .tile[data-c="5"] { opacity:0; }
+  body.deep #pills { opacity:0; }
   #dock { position:absolute; border-radius:46px; transition:opacity .4s; }
   .tile { position:absolute; left:0; top:0; width:260px; height:156px; transition:transform .38s var(--ease); }
   /* La tarjeta se dibuja a tamaño enfocado (116%) y se reduce cuando no tiene foco: así nunca se
@@ -110,23 +117,81 @@
   .mi.red.focus svg { stroke:#ff453a; }
   .msep { height:1.5px; background:rgba(255,255,255,.14); margin:8px 20px; }
 
-  /* ---------- Ajustes (pantalla completa, estilo tvOS) ---------- */
-  #set { opacity:0; pointer-events:none; transition:opacity .3s; z-index:10; visibility:hidden; }
-  #set.on { visibility:visible; }
   /* .gone = retirado del todo tras la animación de cierre: no ocupa memoria gráfica */
   .gone { display:none !important; }
-  #set.on { opacity:1; }
-  #set .ttl { position:absolute; left:0; width:1920px; top:66px; text-align:center; font-size:44px; font-weight:700; }
-  #set .big { position:absolute; left:250px; top:330px; width:420px; height:420px; border-radius:96px; display:flex; align-items:center; justify-content:center;
-    background:linear-gradient(160deg,#8e8e93,#48484a); box-shadow:0 40px 90px rgba(0,0,0,.45), inset 0 2px 0 rgba(255,255,255,.3); overflow:hidden; }
-  #set .big img { width:100%; height:100%; object-fit:cover; }
-  #set .bigcap { position:absolute; left:160px; width:600px; top:790px; text-align:center; font-size:26px; color:var(--dim); line-height:1.45; }
-  #set .lst { position:absolute; left:920px; top:150px; width:880px; height:900px; overflow:hidden; }
-  #set .in { transition:transform .3s var(--ease); padding:24px 24px 60px; }
-  .grp { font-size:24px; color:var(--faint); font-weight:600; margin:28px 30px 12px; text-transform:uppercase; letter-spacing:1.5px; }
+
+  /* ---------- Panel de Entradas (sube desde abajo; mismo cristal que Ajustes) ----------
+     Solo se anima transform; la rejilla de detrás se oculta con opacidad (no redibuja). */
+  #ibar { position:absolute; left:0; bottom:0; width:1920px; height:440px; z-index:10; overflow:hidden; border-radius:48px 48px 0 0;
+    transform:translateY(480px); transition:transform .42s var(--ease); will-change:transform; padding:44px 70px 0;
+    background:linear-gradient(180deg, rgba(255,255,255,.12) 0%, rgba(255,255,255,.04) 45%, rgba(255,255,255,.06) 100%), rgba(22,22,28,.9);
+    border-top:1.5px solid rgba(255,255,255,.22); box-shadow:0 -30px 80px rgba(0,0,0,.45), inset 0 1.5px 0 rgba(255,255,255,.12); }
+  #ibar.on { transform:translateY(0); }
+  body.inbar #page { opacity:0; }
+  .ibHead { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:30px; }
+  .ibHead h2 { font-size:44px; font-weight:700; letter-spacing:-1px; }
+  .ibHead span { font-size:22px; color:var(--dim); }
+  #ibRow { display:flex; transition:transform .3s var(--ease); will-change:transform; padding:12px 6px; }
+  .it { width:236px; height:206px; flex:none; margin-right:22px; border-radius:34px; padding:24px 24px 22px; display:flex; flex-direction:column; justify-content:space-between;
+    background:rgba(255,255,255,.1); box-shadow:inset 0 1.5px 0 rgba(255,255,255,.14); transition:background .14s, color .14s, transform .2s var(--ease); position:relative; }
+  .it .n { font-size:28px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .it .s { font-size:21px; font-weight:500; color:var(--dim); margin-top:4px; }
+  .it .dot { position:absolute; right:24px; top:28px; width:14px; height:14px; border-radius:50%; background:rgba(255,255,255,.22); }
+  .it .dot.on { background:#30d158; box-shadow:0 0 12px rgba(48,209,88,.8); }
+  .it.cur { background:rgba(10,132,255,.55); }
+  .it.focus { background:#fff; color:#000; transform:scale(1.07); }
+  .it.focus .s { color:rgba(0,0,0,.55); }
+
+  /* ---------- Panel de Ajustes (lateral, cristal estilo tvOS) ----------
+     El cristal es la capa difuminada del fondo (body.over) vista a través de un fondo translúcido: sin backdrop-filter,
+     que en la tele hunde los fotogramas. Solo se anima transform; al navegar solo cambia la clase .focus. */
+  #sheet { position:absolute; right:0; top:0; width:820px; height:1080px; z-index:10; overflow:hidden;
+    transform:translateX(870px); transition:transform .42s var(--ease); will-change:transform;
+    background:linear-gradient(180deg, rgba(255,255,255,.11) 0%, rgba(255,255,255,.04) 38%, rgba(255,255,255,.07) 100%), rgba(22,22,28,.9);  /* recortar la rejilla costaba ~90 ms al abrir y cerrar */
+    border-left:1.5px solid rgba(255,255,255,.22); box-shadow:-30px 0 80px rgba(0,0,0,.45), inset 1.5px 0 0 rgba(255,255,255,.1); }
+  #sheet.on { transform:translateX(0); }
+  #shIn { padding:54px 52px 80px; transition:transform .32s var(--ease); will-change:transform; }
+  .shHead { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:34px; }
+  .shTime { font-size:96px; font-weight:300; letter-spacing:-3px; line-height:1; }
+  .shDate { font-size:28px; color:var(--dim); margin-top:10px; }
+  .shW { text-align:right; font-size:26px; line-height:1.35; }
+  .shW .t { display:flex; align-items:center; justify-content:flex-end; font-size:46px; font-weight:300; }
+  .shW .t svg { margin-right:10px; }
+  .shW .s { color:var(--dim); font-size:22px; }
+  .qgrid { display:flex; flex-wrap:wrap; margin:0 -9px 22px; }
+  .qt { width:161px; height:150px; margin:9px; border-radius:32px; padding:22px 20px; display:flex; flex-direction:column; justify-content:space-between;
+    background:rgba(255,255,255,.1); box-shadow:inset 0 1.5px 0 rgba(255,255,255,.14); font-size:23px; font-weight:600;
+    transition:background .14s, color .14s, transform .2s var(--ease); }
+  .qt .s { font-size:19px; font-weight:500; color:var(--dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .qt.on { background:#0a84ff; }
+  .qt.on .s { color:rgba(255,255,255,.85); }
+  .qt.focus { background:#fff; color:#000; transform:scale(1.07); }
+  .qt.focus .s { color:rgba(0,0,0,.55); }
+  .sld { display:flex; align-items:center; height:86px; padding:0 30px; border-radius:26px; background:rgba(255,255,255,.1); margin-bottom:22px;
+    font-size:26px; font-weight:600; transition:background .14s, color .14s, transform .2s var(--ease); }
+  .sld svg { flex:none; margin-right:20px; }
+  .sld .bar { flex:1; height:12px; border-radius:6px; background:rgba(255,255,255,.22); margin:0 22px; overflow:hidden; }
+  .sld .fillb { height:100%; background:#fff; border-radius:6px; transform-origin:0 50%; transition:transform .15s; }
+  .sld .val { width:52px; text-align:right; }
+  .sld.focus { background:#fff; color:#000; transform:scale(1.03); }
+  .sld.focus .bar { background:rgba(0,0,0,.15); }
+  .sld.focus .fillb { background:#0a84ff; }
+  .mon { display:flex; margin:0 -8px 30px; }
+  .mon > div { flex:1; margin:0 8px; padding:20px 24px; border-radius:24px; background:rgba(255,255,255,.06); font-size:21px; color:var(--dim); }
+  .mon b { display:block; color:#fff; font-size:26px; font-weight:600; margin-top:6px; }
+  .mon .mb { height:6px; border-radius:3px; background:rgba(255,255,255,.18); margin-top:12px; overflow:hidden; }
+  .mon .mb i { display:block; height:100%; background:#30d158; transform-origin:0 50%; }
+  .shBack { font-size:26px; color:var(--dim); margin-bottom:8px; }
+  .shTitle { font-size:52px; font-weight:700; letter-spacing:-1px; margin-bottom:22px; }
+  .shSub { display:flex; align-items:center; margin-bottom:26px; }
+  .shIcon { width:150px; height:150px; border-radius:36px; flex:none; margin-right:28px; overflow:hidden; display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(160deg,#8e8e93,#48484a); }
+  .shIcon svg { width:96px; height:96px; } .shIcon img { width:100%; height:100%; object-fit:cover; }
+  .shCap { font-size:22px; color:var(--dim); line-height:1.45; }
+  .grp { font-size:21px; color:var(--faint); font-weight:600; margin:26px 26px 10px; text-transform:uppercase; letter-spacing:1.5px; }
   .grp:first-child { margin-top:0; }
-  .rw { display:flex; align-items:center; justify-content:space-between; min-height:86px; padding:0 32px; border-radius:22px; margin-bottom:8px;
-    font-size:30px; font-weight:500; background:rgba(255,255,255,.075); transition:background .12s, color .12s, transform .18s var(--ease), box-shadow .18s; }
+  .rw { display:flex; align-items:center; justify-content:space-between; min-height:78px; padding:0 28px; border-radius:22px; margin-bottom:8px;
+    font-size:27px; font-weight:500; background:rgba(255,255,255,.075); transition:background .12s, color .12s, transform .18s var(--ease), box-shadow .18s; }
   .rw .l { display:flex; align-items:center; min-width:0; }
   .rw .l span { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .rw .v { color:var(--dim); display:flex; align-items:center; white-space:nowrap; margin-left:24px; }
@@ -143,34 +208,11 @@
   .rw.focus .v { color:rgba(0,0,0,.55); }
   .rw.red { color:#ff453a; }
 
-  /* ---------- Centro de control ---------- */
-  #cc { position:absolute; left:1240px; top:0; width:680px; height:1080px; background:var(--panel); border-left:1.5px solid var(--glassBorder);
-    padding:60px 50px; transform:translateX(700px); transition:transform .4s var(--ease); z-index:9; }
-  #cc.on { transform:translateX(0); }
-  #cc .tm { font-size:108px; font-weight:300; letter-spacing:-3px; line-height:1; }
-  #cc .dt { font-size:30px; color:var(--dim); margin:10px 0 34px; }
-  .ccg { position:relative; }
-  .cct { position:absolute; width:280px; height:150px; border-radius:34px; background:rgba(255,255,255,.1); padding:24px 28px;
-    display:flex; flex-direction:column; justify-content:space-between; font-size:26px; font-weight:600; transition:background .12s, color .12s, transform .18s var(--ease); }
-  .cct.wide { width:580px; height:250px; }
-  .cct .s { font-size:22px; font-weight:500; color:var(--dim); }
-  .cct.focus { background:#fff; color:#000; transform:scale(1.05); }
-  .cct.focus .s { color:rgba(0,0,0,.55); }
-  .cct.focus > svg { stroke:#000; }
-  /* El tiempo lleva iconos blancos: al enfocarlo se aclara el cristal en vez de volverse blanco */
-  .cct.wide.focus { background:rgba(255,255,255,.3); color:#fff; }
-  .cct.wide.focus .s { color:rgba(255,255,255,.8); }
-  .wbig { display:flex; align-items:center; }
-  .wbig .t { font-size:76px; font-weight:300; margin-left:18px; letter-spacing:-2px; }
-  .wbig .d { margin-left:26px; font-size:26px; line-height:1.4; }
-  .hrs { display:flex; justify-content:space-between; font-size:21px; text-align:center; }
-  .hrs div { width:80px; } .hrs svg { display:block; margin:4px auto; }
-
   /* ---------- Notificación ---------- */
   #toast { position:absolute; right:70px; top:136px; padding:20px 30px; border-radius:28px; font-size:27px; font-weight:500; max-width:700px;
     background:rgba(44,44,52,.92); border:1.5px solid var(--glassBorder); opacity:0; transform:translateY(-16px); transition:opacity .2s, transform .3s var(--ease); z-index:20; }
   #toast.on { opacity:1; transform:translateY(0); }
-  body.incc #toast { right:740px; }
+  body.insheet #toast { right:880px; }
 
   /* ---------- Transición al abrir una app (como el zoom de tvOS) ---------- */
   #launch { opacity:0; z-index:15; pointer-events:none; display:flex; align-items:center; justify-content:center; transition:opacity .28s ease; }
@@ -206,17 +248,15 @@
 <div class="fill" id="dim"></div>
 
 <div id="shelf"><div id="shelfTitle"></div><div id="shelfSub"></div></div>
-<div id="pill" class="gl"><span class="w" id="pillW"></span><span id="pillT">--:--</span><span class="av"><svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><circle cx="12" cy="8" r="4.2"/><path d="M3.5 21a8.5 8.5 0 0 1 17 0z"/></svg></span></div>
+<div id="pills"><div id="inPill" class="gl"></div><div id="pill" class="gl"><span class="w" id="pillW"></span><span id="pillT">--:--</span><span class="av"><svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><circle cx="12" cy="8" r="4.2"/><path d="M3.5 21a8.5 8.5 0 0 1 17 0z"/></svg></span></div></div>
 
 <div id="page"><div id="dock" class="gl"></div><div id="grid"></div></div>
 
 <div id="menu" class="gone"></div>
 <div id="hint"></div>
 
-<div class="fill gone" id="set"><div class="ttl" id="setT"></div><div class="big" id="setI"></div><div class="bigcap" id="setC"></div>
-  <div class="lst"><div class="in" id="setL"></div></div></div>
-
-<div id="cc" class="gone"><div class="tm" id="ccT"></div><div class="dt" id="ccD"></div><div class="ccg" id="ccG"></div></div>
+<div id="sheet" class="gone"><div id="shIn"></div></div>
+<div id="ibar" class="gone"><div class="ibHead"><h2>Entradas</h2><span id="ibHint"></span></div><div id="ibRow"></div></div>
 
 <div class="fill" id="launch"></div>
 <div id="toast"></div>
@@ -239,6 +279,8 @@ var SVG = {
   'switch': '<svg width="96" height="96" viewBox="0 0 100 100"><path d="M44 8 H30 A22 22 0 0 0 8 30 V70 A22 22 0 0 0 30 92 H44 Z" fill="none" stroke="#fff" stroke-width="7"/><circle cx="28" cy="32" r="8" fill="#fff"/><path d="M56 8 H70 A22 22 0 0 1 92 30 V70 A22 22 0 0 1 70 92 H56 Z" fill="#fff"/><circle cx="72" cy="60" r="8" fill="#e60012"/></svg>',
   xbox: '<svg width="96" height="96" viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="#fff"/><path d="M22 22 Q50 40 78 78 M78 22 Q50 40 22 78" stroke="#107c10" stroke-width="12" fill="none" stroke-linecap="round"/></svg>',
   store: '<svg width="96" height="96" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg>',
+  hdmiBig: '<svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h18v5l-3 3H6l-3-3z"/><path d="M7 11h10"/></svg>',
+  usbBig: '<svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v14M8 6l4-4 4 4M7 12v2a5 5 0 0 0 10 0v-2"/><circle cx="12" cy="19" r="2"/></svg>',
   gear: '<svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>'
 };
 // Glifos de línea (menús, centro de control, ajustes); heredan el color con stroke="currentColor"
@@ -261,14 +303,20 @@ function G(name, s){
     reset:'<path d="M4 12a8 8 0 1 0 2.4-5.7L4 8.6M4 4v4.6h4.6"/>',
     pin:'<path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
     therm:'<path d="M10 14V5a2 2 0 0 1 4 0v9a4 4 0 1 1-4 0z"/>',
-    top:'<path d="M12 20V6M6 11l6-6 6 6M4 3h16"/>'
+    top:'<path d="M12 20V6M6 11l6-6 6 6M4 3h16"/>',
+    speaker:'<path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/>',
+    mute:'<path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/>',
+    image:'<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8"/><circle cx="12" cy="10.5" r="3"/>',
+    shield:'<path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/>',
+    usb:'<path d="M12 2v14M8 6l4-4 4 4M7 12v2a5 5 0 0 0 10 0v-2"/><circle cx="12" cy="19" r="2"/>',
+    inputs:'<rect x="3" y="5" width="18" height="12" rx="2"/><path d="M10 9l3 2-3 2zM8 21h8"/>'
   }[name] || '';
   return '<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+p+'</svg>';
 }
 function small(svg, s){ return svg.replace(/width="\d+" height="\d+"/, 'width="'+s+'" height="'+s+'"'); }
 
 // ======================= CONFIGURACIÓN =======================
-var VERSION = '1.3';
+var VERSION = '1.4';
 var BRAND = {
   'org.tizen.netflix-app':        { bg:'#000', svg:'netflix' },
   'org.tizen.primevideo':         { bg:'linear-gradient(135deg,#0f79af,#1a98ff)', svg:'prime', noIcon:true },
@@ -441,7 +489,7 @@ function build(){
       g.appendChild(t); TILES[k] = t; t.offsetWidth; t.style.transition = '';
       sampleIcon(it);
     }
-    t.style.transform = 'translate('+p.x+'px,'+p.y+'px)';
+    t.style.transform = 'translate('+p.x+'px,'+p.y+'px)'; t.setAttribute('data-c', i % COLS);
     keep[k] = 1;
   });
   Object.keys(TILES).forEach(function(k){ if(!keep[k]){ g.removeChild(TILES[k]); delete TILES[k]; } });
@@ -451,7 +499,7 @@ function build(){
   focus(ni >= 0 ? ni : Math.min(f, L.length-1), true);
 }
 function focus(i, instant){
-  if(onPill){ $('pill').classList.remove('focus'); onPill = false; }
+  if(onPill){ $('pill').classList.remove('focus'); $('inPill').classList.remove('focus'); onPill = false; }
   var old = TILES[L[f]]; if(old) old.classList.remove('focus', 'moving');
   f = Math.max(0, Math.min(L.length-1, i));
   var t = TILES[L[f]]; if(!t) return;
@@ -462,7 +510,9 @@ function focus(i, instant){
   shelfFor(ITEMS[L[f]], instant);
   bumpIdle();
 }
-function focusPill(){ var t = TILES[L[f]]; if(t) t.classList.remove('focus'); onPill = true; $('pill').classList.add('focus'); }
+var pillSel = 1;   // 0 = Entradas, 1 = Ajustes (tiempo · hora · perfil)
+function paintPills(){ $('inPill').classList.toggle('focus', pillSel === 0); $('pill').classList.toggle('focus', pillSel === 1); }
+function focusPill(){ var t = TILES[L[f]]; if(t) t.classList.remove('focus'); onPill = true; pillSel = 1; paintPills(); }
 
 // ---------- Top Shelf ----------
 var shelfT;
@@ -612,7 +662,7 @@ function paintWeather(){
   $('pillW').innerHTML = on ? wIcon(W.cur.weather_code, W.cur.is_day, 40) + temp(W.cur.temperature_2m) : '';
   $('pillW').style.display = on ? '' : 'none';
   $('sW').innerHTML = W ? wIcon(W.cur.weather_code, W.cur.is_day, 40) + temp(W.cur.temperature_2m) + ' · ' + esc(W.loc.name || '') : '';
-  if(CC) renderCC();
+  if(SET && SET.length === 1) renderSettings();
 }
 
 // ---------- Abrir ----------
@@ -783,12 +833,10 @@ function rootPage(){
       }).concat([{ l:'Canal al abrir TV', v:function(){ return S.channel === 'last' ? 'Último visto' : S.channel; }, page:channelPage },
         { l:'Detectar puertos con HDMI-CEC', ok:function(){ S.ports = {}; persist(); refreshSources(); toast('Puertos detectados por HDMI-CEC'); } }]) },
     { h:'Televisor', rows:[
-      { l:'Volumen', adj:true, v:function(){ return volGet(); }, left:function(){ volStep(-1); }, right:function(){ volStep(1); } },
-      { l:'Silenciar', v:function(){ return muteGet() ? 'Sí' : 'No'; }, ok:muteToggle },
       native('Modo de imagen y sonido', 'org.tizen.menu', 'Ajustes de Samsung'),
       native('Wi-Fi y red', 'org.tizen.NetworkSetting-Tizen', 'Configurar red'),
       native('Bluetooth', 'org.tizen.btaudiolist', 'Dispositivos Bluetooth'),
-      { l:'Compartir pantalla: Android › Smart View · iPhone › AirPlay · Windows › Win+K', info:true },
+      { l:'Compartir pantalla', v:function(){ return 'Smart View · AirPlay'; }, page:sharePage },
       native('Cuidado del dispositivo', 'com.samsung.TVDeviceCare', 'Liberar memoria'),
       native('Todos los ajustes de Samsung', 'org.tizen.menu') ]},
     { h:'Sistema', rows:[ { l:'Abrir al encender la tele', page:bootPage }, { l:'Información', page:infoPage } ]}
@@ -801,6 +849,15 @@ function native(l, appId, sub){
     try { tizen.application.launch(appId, function(){}, function(e){ LOG('native', appId, e.message); toast('Esta tele no permite abrir '+l); }); }
     catch(e){ toast('Esta tele no permite abrir '+l); }
   } };
+}
+function sharePage(){
+  return { title:'Compartir pantalla', icon:bigG('image'), cap:'La tele siempre está lista para recibir:<br>se empieza desde el otro dispositivo.', groups:[
+    { h:'Desde el móvil o el ordenador', rows:[
+      { l:'Android: Ajustes rápidos › Smart View', info:true },
+      { l:'iPhone, iPad o Mac: Duplicar pantalla › AirPlay', info:true },
+      { l:'Windows: tecla Windows + K', info:true } ]},
+    { h:'Si no aparece la tele', rows:[ { l:'Misma red wifi en los dos dispositivos', info:true } ]}
+  ]};
 }
 function bootPage(){
   return { title:'Abrir al encender', icon:bigG('power'), cap:'Con el botón Home asignado a Mi Inicio<br>(script set-home.sh del ordenador), la tele lo abre al encender.', groups:[
@@ -915,111 +972,230 @@ function infoPage(){
 }
 function sortAZ(){ S.order = L.slice().sort(function(a, b){ return ITEMS[a].name.localeCompare(ITEMS[b].name); }); persist(); build(); }
 
+// Panel lateral: vista raíz (cabecera, accesos rápidos, volumen, monitor y lista) o una subpágina.
+// SET = pila de páginas; FOC = elementos enfocables de la vista actual, en orden visual.
+var FOC = [], monT = null;
+function quickTiles(){
+  var t = [];
+  INPUTS.forEach(function(it){
+    var tv = it.source.type === 'TV';
+    t.push({ g: tv ? 'tv' : 'game', l: it.name.replace('Nintendo ','').replace(' Series X',''),
+      s: function(){ return tv ? 'TDT' : 'HDMI '+it.source.number; },
+      ok: function(){ closeSettings(); openSource(it); } });
+  });
+  t.push({ g:'mute', l:'Silencio', s:function(){ return muteGet() ? 'Activado' : 'No'; }, on:muteGet, ok:muteToggle });
+  t.push({ g:'saver', l:'Salvapant.', s:function(){ return 'Iniciar ahora'; }, ok:function(){ closeSettings(); saverOn(); } });
+  t.push({ g:'next', l:'Fondo', s:function(){ return 'Siguiente'; }, ok:function(){ S.photo = -1; persist(); showPhoto(photoIdx + 1); } });
+  t.push({ g:'shield', l:'Samsung', s:function(){ return 'Salvap. '+(S.samsungSaver ? 'sí' : 'no'); }, on:function(){ return S.samsungSaver; },
+    ok:function(){ S.samsungSaver = !S.samsungSaver; persist(); applySamsungSaver(); } });
+  t.push({ g:'image', l:'Imagen', s:function(){ return 'y sonido'; }, ok: native('Imagen', 'org.tizen.menu').ok });
+  return t;
+}
 function openSettings(page){
   closeMenu();
   var root = rootPage(); root.make = rootPage;
   SET = [{ p:root, i:0 }];
   if(page) SET.push({ p:page, i:0 });
-  document.body.classList.add('over', 'inset'); panelShow($('set')); renderSettings();
+  document.body.classList.add('over', 'insheet'); renderSettings(); panelShow($('sheet'));
+  startMonitor();
 }
-function closeSettings(){ SET = null; panelHide($('set')); document.body.classList.remove('over', 'inset'); }
+function closeSettings(){
+  SET = null; panelHide($('sheet')); document.body.classList.remove('over', 'insheet');
+  clearInterval(monT); monT = null;
+}
 function popSettings(){
   if(!SET) return;
   SET.pop();
   if(!SET.length){ closeSettings(); return; }
-  // Regenerar la página para que los valores (y el icono grande) reflejen el cambio
   var top = SET[SET.length-1], fresh = top.p.make ? top.p.make() : null;
   if(fresh){ fresh.make = top.p.make; top.p = fresh; }
   renderSettings();
 }
 function flatRows(p){ var a = []; p.groups.forEach(function(g){ g.rows.forEach(function(r){ a.push(r); }); }); return a; }
-function setBigIcon(html, cap){ $('setI').innerHTML = html; if(cap !== undefined) $('setC').innerHTML = cap; }
+function setBigIcon(html, cap){ var i = $('shIcon'), c = $('shCap'); if(i) i.innerHTML = html; if(c && cap !== undefined) c.innerHTML = cap; }
 function pushPage(maker){ var p = maker(); p.make = maker; SET.push({ p:p, i:0 }); renderSettings(); }
-function renderSettings(){
-  var top = SET[SET.length-1], p = top.p, h = '', n = 0;
-  $('setT').textContent = p.title; setBigIcon(p.icon, p.cap || '');
+function rowsHTML(p, startIdx){
+  var h = '', n = startIdx;
   p.groups.forEach(function(g){
     if(g.h) h += '<div class="grp">'+esc(g.h)+'</div>';
     g.rows.forEach(function(r){
       var v = r.check ? (r.check() ? '<span class="ck">✓</span>' : '') : (r.v ? esc(r.v()) : '');
-      h += '<div class="rw'+(r.info?' info':'')+(r.red?' red':'')+(n===top.i?' focus':'')+'"><span class="l">'+(r.thumb||'')+'<span>'+esc(r.l)+'</span></span>'+
-           '<span class="v">'+(r.adj ? '<span class="adj">'+v+'</span>' : v)+(r.page ? '<span class="chev">›</span>' : '')+(r.ext ? '<span class="ext">↗</span>' : '')+'</span></div>';
-      n++;
+      h += '<div class="rw'+(r.info?' info':'')+(r.red?' red':'')+'" data-f="'+(n++)+'"><span class="l">'+(r.thumb||'')+'<span>'+esc(r.l)+'</span></span>'+
+           '<span class="v">'+v+(r.page ? '<span class="chev">›</span>' : '')+(r.ext ? '<span class="ext">↗</span>' : '')+'</span></div>';
     });
   });
-  $('setL').innerHTML = h; scrollSettings();
-  var fr = flatRows(p)[top.i]; if(fr && fr.focusFx) fr.focusFx();
+  return h;
 }
-function scrollSettings(){
-  var el = $('setL').querySelector('.rw.focus'); if(!el) return;
-  $('setL').style.transform = 'translateY('+(-Math.max(0, el.offsetTop - 430))+'px)';
+function weatherHTML(){
+  if(!W) return '<div class="shW"><div class="s">Tiempo sin datos</div></div>';
+  return '<div class="shW"><div class="t">'+wIcon(W.cur.weather_code, W.cur.is_day, 54)+temp(W.cur.temperature_2m)+'</div>'+
+    esc(W.loc.name||'')+'<div class="s">'+esc(wdesc())+' · '+temp(W.max)+' / '+temp(W.min)+'</div></div>';
+}
+function renderSettings(){
+  var top = SET[SET.length-1], p = top.p, h = '';
+  FOC = [];
+  if(SET.length === 1){
+    var n = new Date(), d = n.toLocaleDateString('es-ES',{weekday:'long', day:'numeric', month:'long'});
+    h += '<div class="shHead"><div><div class="shTime" id="shTime">'+pad(n.getHours())+':'+pad(n.getMinutes())+'</div><div class="shDate">'+esc(d.charAt(0).toUpperCase()+d.slice(1))+'</div></div>'+weatherHTML()+'</div>';
+    h += '<div class="qgrid">';
+    quickTiles().forEach(function(q){
+      h += '<div class="qt'+(q.on && q.on() ? ' on' : '')+'" data-f="'+FOC.length+'">'+G(q.g, 40)+'<div>'+esc(q.l)+'<div class="s">'+esc(q.s())+'</div></div></div>';
+      FOC.push({ kind:'tile', ok:q.ok });
+    });
+    h += '</div>';
+    var vol = parseInt(volGet(), 10) || 0;
+    h += '<div class="sld" data-f="'+FOC.length+'">'+G(muteGet() ? 'mute' : 'speaker', 38)+'Volumen<div class="bar"><div class="fillb" style="transform:scaleX('+(vol/100)+')"></div></div><span class="val">'+vol+'</span></div>';
+    FOC.push({ kind:'slider' });
+    h += '<div class="mon"><div>Memoria<b id="monRam">—</b><div class="mb"><i id="monRamBar" style="transform:scaleX(0)"></i></div></div><div>Red<b id="monNet">—</b></div></div>';
+  } else {
+    h += '<div class="shBack">‹ '+esc(SET[SET.length-2].p.title)+'</div><div class="shTitle">'+esc(p.title)+'</div>';
+    if(p.icon || p.cap) h += '<div class="shSub"><div class="shIcon" id="shIcon">'+(p.icon||'')+'</div><div class="shCap" id="shCap">'+(p.cap||'')+'</div></div>';
+  }
+  var base = FOC.length;
+  h += rowsHTML(p, base);
+  flatRows(p).forEach(function(r){ FOC.push({ kind:'row', r:r }); });
+  $('shIn').innerHTML = h;
+  // En la raíz, el foco empieza en la primera baldosa; en subpáginas, en la fila que se recuerda
+  if(top.i >= FOC.length) top.i = FOC.length - 1;
+  paintFocus();
+}
+function paintFocus(){
+  var top = SET[SET.length-1], els = $('shIn').querySelectorAll('[data-f]');
+  for(var j=0;j<els.length;j++) els[j].classList.toggle('focus', +els[j].getAttribute('data-f') === top.i);
+  var el = $('shIn').querySelector('[data-f="'+top.i+'"]');
+  if(el) $('shIn').style.transform = 'translateY('+(-Math.max(0, el.offsetTop - 460))+'px)';
+  var f0 = FOC[top.i]; if(f0 && f0.r && f0.r.focusFx) f0.r.focusFx();
 }
 function setKey(k){
-  var top = SET[SET.length-1], rows = flatRows(top.p), r = rows[top.i];
-  if(k===38 || k===40){
-    var i = top.i + (k===40 ? 1 : -1);
-    if(i < 0 || i >= rows.length) return;
-    top.i = i;
-    var els = $('setL').querySelectorAll('.rw');
-    for(var j=0;j<els.length;j++) els[j].classList.toggle('focus', j===i);
-    scrollSettings();
-    if(rows[i].focusFx) rows[i].focusFx();
+  var top = SET[SET.length-1], cur = FOC[top.i], i = top.i, COLQ = 4;
+  if(k===10009 || k===403){ if(k===403) closeSettings(); else popSettings(); return; }
+  if(cur.kind === 'tile'){
+    var nt = FOC.filter(function(x){ return x.kind === 'tile'; }).length;
+    if(k===37 && i % COLQ > 0) i--;
+    else if(k===39 && i % COLQ < COLQ-1 && i+1 < nt) i++;
+    else if(k===38 && i - COLQ >= 0) i -= COLQ;
+    else if(k===40) i = i + COLQ < nt ? i + COLQ : nt;
+    else if(k===13){ cur.ok(); if(SET) renderSettings(); return; }
+  } else if(cur.kind === 'slider'){
+    if(k===37 || k===39){ volStep(k===39 ? 1 : -1); var v = parseInt(volGet(), 10) || 0, el = $('shIn').querySelector('.sld');
+      el.querySelector('.fillb').style.transform = 'scaleX('+(v/100)+')'; el.querySelector('.val').textContent = v; return; }
+    if(k===13){ muteToggle(); renderSettings(); return; }
+    if(k===38) i = Math.max(0, i - COLQ);
+    else if(k===40) i++;
+  } else {
+    var r = cur.r;
+    if(k===38) i--;
+    else if(k===40) i++;
+    else if(k===13){ if(r.page) pushPage(r.page); else if(r.ok){ r.ok(); if(SET && SET[SET.length-1] === top) renderSettings(); } return; }
+    else if((k===37 && r.left) || (k===39 && r.right)){ (k===37 ? r.left : r.right)(); renderSettings(); return; }
   }
-  else if(k===13){
-    if(r.page) pushPage(r.page);
-    else if(r.ok){ r.ok(); if(SET && SET[SET.length-1] === top) renderSettings(); }
-  }
-  else if((k===37 && r.left) || (k===39 && r.right)){ (k===37 ? r.left : r.right)(); renderSettings(); }
-  else if(k===10009) popSettings();
+  if(i < 0 || i >= FOC.length || i === top.i) return;
+  top.i = i; paintFocus();
+}
+// Monitor ligero mientras el panel está abierto: memoria libre y latencia de red (cada 3 s; solo cambia texto)
+function startMonitor(){
+  clearInterval(monT);
+  var tick2 = function(){
+    if(!SET || SET.length !== 1) return;
+    try {
+      var tot = tizen.systeminfo.getTotalMemory(), av = tizen.systeminfo.getAvailableMemory(), used = 1 - av / tot;
+      var ram = $('monRam'), bar = $('monRamBar');
+      if(ram){ ram.textContent = Math.round(used * 100)+' % · '+Math.round(av / 1048576)+' MB libres'; bar.style.transform = 'scaleX('+used.toFixed(3)+')'; }
+    } catch(e){ var r0 = $('monRam'); if(r0) r0.textContent = 'No disponible'; }
+    var t0 = Date.now(), x = new XMLHttpRequest();
+    x.open('GET', 'https://1.1.1.1/cdn-cgi/trace?'+t0, true); x.timeout = 3000;
+    x.onload = function(){ var nn = $('monNet'); if(nn) nn.textContent = 'Wi-Fi · '+(Date.now() - t0)+' ms'; };
+    x.onerror = x.ontimeout = function(){ var nn = $('monNet'); if(nn) nn.textContent = 'Sin conexión'; };
+    x.send();
+  };
+  tick2(); monT = setInterval(tick2, 3000);
 }
 
-// ---------- Centro de control ----------
-var CC = null, ci = 0;
-function ccItems(){
-  var a = [{ w:true, act:function(){ refreshWeather(true); toast('Actualizando el tiempo…'); } }];
-  a.push({ g:'saver', t:'Salvapantallas', s:'Iniciar ahora', act:function(){ closeCC(); saverOn(); } });
-  a.push({ g:'next', t:'Fondo', s:'Siguiente foto', act:function(){ S.photo = -1; persist(); showPhoto(photoIdx + 1); } });
-  INPUTS.forEach(function(it){
-    a.push({ g: it.source.type==='TV' ? 'tv' : 'game', t:it.name.replace('Nintendo ','').replace(' Series X',''),
-      s: it.source.type==='TV' ? 'TDT' : 'HDMI '+it.source.number+(SRC_ON[it.source.number] ? ' · Conectada' : ''),
-      act:function(){ closeCC(); openSource(it); } });
-  });
-  a.push({ g:'settings', t:'Ajustes', s:'Mi Inicio', act:function(){ closeCC(); openSettings(); } });
-  return a;
+// ---------- Panel de Entradas ----------
+// Todas las entradas que reporta la tele (VIDEOSOURCE) y las memorias USB montadas.
+// Nombre del aparato: el de HDMI-CEC si lo hay; si no, el que el usuario asignó a ese puerto en Ajustes.
+var INB = null, ii = 0, STORAGES = [];
+function cecName(n){
+  if(!n) return '';
+  var m = [[/xbox/i,'Xbox'],[/nintendo|switch/i,'Switch'],[/playstation|ps[345]/i,'PlayStation'],[/apple ?tv/i,'Apple TV'],
+    [/chromecast|google/i,'Google TV'],[/fire/i,'Fire TV'],[/blu-?ray|bd/i,'Blu-ray'],[/soundbar|barra|hw-/i,'Barra de sonido']];
+  for(var i=0;i<m.length;i++) if(m[i][0].test(n)) return m[i][1];
+  return n.replace(/\|.*$/, '').trim();
 }
-function openCC(){ closeMenu(); ci = 0; renderCC(); panelShow($('cc')); document.body.classList.add('over', 'incc'); }
-function closeCC(){ CC = null; panelHide($('cc')); document.body.classList.remove('over', 'incc'); if(onPill) focus(f); }
-function renderCC(){
-  CC = ccItems();
-  var h = '', y = 0, x = 0;
-  CC.forEach(function(o, i){
-    var cls = 'cct'+(o.w?' wide':'')+(i===ci?' focus':'');
-    if(o.w){
-      var inner = W ? '<div class="wbig">'+wIcon(W.cur.weather_code, W.cur.is_day, 90)+'<span class="t">'+temp(W.cur.temperature_2m)+'</span><span class="d">'+
-        esc(W.loc.name||'')+'<br><span class="s">'+esc(wdesc())+'<br>Máx. '+temp(W.max)+'  Mín. '+temp(W.min)+'</span></span></div>'+
-        '<div class="hrs">'+W.hours.map(function(hh){ return '<div><span class="s">'+hh[0]+' h</span>'+wIcon(hh[2], hh[3], 40)+temp(hh[1])+'</div>'; }).join('')+'</div>'
-        : '<div>Tiempo</div><div class="s">Sin conexión todavía</div>';
-      h += '<div class="'+cls+'" style="left:0;top:0">'+inner+'</div>'; y = 280;
-    } else {
-      h += '<div class="'+cls+'" style="left:'+(x*300)+'px;top:'+y+'px">'+G(o.g, 40)+'<div>'+esc(o.t)+'<div class="s">'+esc(o.s)+'</div></div></div>';
-      x++; if(x === 2){ x = 0; y += 170; }
-    }
-  });
-  $('ccG').innerHTML = h;
+function typeLabel(t){ return { HDMI:'HDMI', AV:'AV', COMP:'Componente', COMPONENT:'Componente', DVI:'DVI', DP:'DisplayPort', SCART:'Euroconector', PC:'PC', TV:'TV' }[t] || t; }
+function sourceItem(src, connected){
+  if(src.type === 'TV'){
+    var tvIt = INPUTS.filter(function(x){ return x.source.type === 'TV'; })[0];
+    return { g:'tv', n:'TV', s:'TDT'+(targetChannel() ? ' · '+targetChannel().name : ''), on:true, act:function(){ openSource(tvIt); } };
+  }
+  var own = INPUTS.filter(function(x){ return x.source.type === src.type && S.ports[x.key] === src.number; })[0];
+  var name = cecName(src.editName) || (own ? own.name.replace('Nintendo ','').replace(' Series X','') : '');
+  var port = typeLabel(src.type)+' '+src.number;
+  var svg = /xbox/i.test(name) ? 'xbox' : /switch/i.test(name) ? 'switch' : 'hdmiBig';
+  var it = { key:'src:'+src.type+src.number, name: name || port, svg:svg, bg: svg === 'xbox' ? 'linear-gradient(135deg,#0d6b0d,#22a522)' : svg === 'switch' ? 'linear-gradient(135deg,#d7101b,#ff3b3b)' : 'linear-gradient(135deg,#2c2c34,#4a4a56)',
+    source:{ type:src.type, number:src.number } };
+  return { g: name ? 'game' : 'hdmi', n: name || port, s: name ? port : (connected ? 'Conectado' : 'Sin señal'), on:connected, act:function(){ openSource(it); } };
 }
-// Índices: 0 = tiempo (ancho); después pares de columnas (1,2), (3,4)...
-function ccKey(k){
-  var n = CC.length, col = ci === 0 ? 0 : (ci - 1) % 2;
-  if(k===38) ci = ci <= 2 ? 0 : ci - 2;
-  else if(k===40) ci = ci === 0 ? 1 : Math.min(n-1, ci + 2);
-  else if(k===37){ if(ci > 0 && col === 1) ci--; else { closeCC(); return; } }
-  else if(k===39){ if(ci > 0 && col === 0 && ci + 1 < n) ci++; }
-  else if(k===13){ CC[ci].act(); if(CC) renderCC(); return; }
-  else if(k===10009 || k===403){ closeCC(); return; }
+function inputItems(cb){
+  allSources(function(conn, all){
+    var isOn = function(s){ return conn.some(function(c){ return c.type === s.type && c.number === s.number; }); };
+    var items = all.slice().sort(function(a, b){ return a.type === 'TV' ? -1 : b.type === 'TV' ? 1 : (a.type + a.number < b.type + b.number ? -1 : 1); })
+      .map(function(src){ return sourceItem(src, isOn(src)); });
+    STORAGES.forEach(function(st){
+      items.push({ g:'usb', n: st.label && !/^(removable|usb)/i.test(st.label) ? st.label : 'USB', s:'Memoria externa', on:true,
+        act:function(){ openUsb(st); } });
+    });
+    cb(items);
+  });
+}
+// El explorador de USB de Samsung no se deja abrir desde otra app (probado: mycontents, ContentsBrowser y
+// usb-launcher-tv vuelven al inicio), así que se indica cómo abrirlo.
+function openUsb(st){ toast('Abre el USB desde el menú de fuentes de Samsung: no deja abrirlo desde otra app'); }
+function loadStorages(){
+  try {
+    tizen.filesystem.listStorages(function(list){
+      STORAGES = list.filter(function(x){ return x.type === 'EXTERNAL' && x.state === 'MOUNTED'; });
+      if(INB) openInputs(true);
+    }, function(e){ LOG('storages', e.message); });
+  } catch(e){ LOG('storages', e.message); }
+}
+function openInputs(keep){
+  if(!hasTizen){ inputPreview(); return; }
+  inputItems(function(items){ showInputs(items, keep); });
+}
+// Sin la tele (vista previa en el ordenador): entradas de ejemplo
+function inputPreview(){
+  showInputs([{ g:'tv', n:'TV', s:'TDT', on:true, act:function(){ toast('Vista previa: TV'); } },
+    { g:'game', n:'Switch', s:'HDMI 1', on:false, act:function(){ toast('Vista previa: HDMI 1'); } },
+    { g:'game', n:'Xbox', s:'HDMI 2', on:true, act:function(){ toast('Vista previa: HDMI 2'); } },
+    { g:'hdmi', n:'HDMI 3', s:'Sin señal', on:false, act:function(){} }, { g:'hdmi', n:'HDMI 4', s:'Sin señal', on:false, act:function(){} },
+    { g:'usb', n:'USB', s:'Memoria externa', on:true, act:function(){ toast('Vista previa: USB'); } }]);
+}
+function showInputs(items, keep){
+  closeMenu();
+  INB = items; if(!keep) ii = 0; ii = Math.min(ii, items.length - 1);
+  var h = '';
+  items.forEach(function(x, i){ h += '<div class="it'+(i===ii?' focus':'')+'">'+G(x.g, 52)+'<span class="dot'+(x.on?' on':'')+'"></span><div><div class="n">'+esc(x.n)+'</div><div class="s">'+esc(x.s)+'</div></div></div>'; });
+  $('ibRow').innerHTML = h;
+  $('ibHint').textContent = 'Nombres detectados por HDMI-CEC · ● con señal';
+  scrollInputs();
+  if(!keep){ document.body.classList.add('over', 'inbar'); panelShow($('ibar')); }
+}
+function scrollInputs(){
+  var w = 258, visible = Math.floor((1920 - 140) / w), off = Math.max(0, Math.min(ii - (visible - 2), INB.length - visible));
+  $('ibRow').style.transform = 'translateX('+(-Math.max(0, off) * w)+'px)';
+}
+function closeInputs(){ INB = null; panelHide($('ibar')); document.body.classList.remove('over', 'inbar'); }
+function inputsKey(k){
+  var n = INB.length;
+  if(k===37 && ii > 0) ii--;
+  else if(k===39 && ii < n - 1) ii++;
+  else if(k===13){ var a = INB[ii].act; closeInputs(); a(); return; }
+  else if(k===10009 || k===38){ closeInputs(); return; }
   else return;
-  // Solo se mueve el foco; redibujar todo el panel en cada tecla daba tirones en la tele
-  var els = $('ccG').children;
-  for(var i=0;i<els.length;i++) els[i].classList.toggle('focus', i===ci);
+  var els = $('ibRow').children;
+  for(var i=0;i<els.length;i++) els[i].classList.toggle('focus', i===ii);
+  scrollInputs();
 }
 
 // ---------- Salvapantallas ----------
@@ -1074,7 +1250,9 @@ function registerKeys(){
 function homeNav(k){
   if(onPill){
     if(k===40 || k===10009) focus(f);
-    else if(k===13) openCC();
+    else if(k===37){ pillSel = 0; paintPills(); }
+    else if(k===39){ pillSel = 1; paintPills(); }
+    else if(k===13){ if(pillSel === 0) openInputs(); else openSettings(); }
     return;
   }
   var c = f % COLS;
@@ -1091,7 +1269,7 @@ document.addEventListener('keydown', function(e){
   bumpIdle();
   if(k===13 && e.repeat) return;            // las repeticiones de OK mantenido no cuentan
   if(SET){ setKey(k); return; }
-  if(CC){ ccKey(k); return; }
+  if(INB){ inputsKey(k); return; }
   if(MENU){ menuKey(k); return; }
   if(moving){ moveKey(k); return; }
   if(k===13){
@@ -1103,7 +1281,7 @@ document.addEventListener('keydown', function(e){
     return;
   }
   if(k===405){ if(!onPill) openMenu(); return; }   // amarillo
-  if(k===403){ openCC(); return; }                 // rojo
+  if(k===403){ openSettings(); return; }           // rojo
   if(k===406){ openSettings(); return; }           // azul
   homeNav(k);
 });
@@ -1111,7 +1289,7 @@ document.addEventListener('keyup', function(e){
   if(e.keyCode !== 13) return;
   if(okT && okT !== 'long'){
     clearTimeout(okT); okT = null;
-    if(!L[f] || SET || CC || MENU || moving) return;
+    if(!L[f] || SET || INB || MENU || moving) return;
     // Si el temporizador se retrasó (tele ocupada), la duración real de la pulsación manda
     if(Date.now() - okAt >= 550) openMenu(); else activate(ITEMS[L[f]]);
     return;
@@ -1130,7 +1308,7 @@ document.addEventListener('visibilitychange', function(){
 function tick(){
   var n = new Date(), t = pad(n.getHours())+':'+pad(n.getMinutes());
   var d = n.toLocaleDateString('es-ES',{weekday:'long', day:'numeric', month:'long'}); d = d.charAt(0).toUpperCase() + d.slice(1);
-  $('pillT').textContent = t; $('sT').textContent = t; $('ccT').textContent = t; $('ccD').textContent = d;
+  $('pillT').textContent = t; $('sT').textContent = t; var st = $('shTime'); if(st) st.textContent = t;
 }
 
 // ---------- Arranque ----------
@@ -1140,6 +1318,8 @@ try { PLATFORM = tizen.systeminfo.getCapability('http://tizen.org/feature/platfo
 try { if(!MODEL) tizen.systeminfo.getPropertyValue('BUILD', function(b){ MODEL = b.model; }); } catch(e){}
 tick(); setInterval(tick, 5000);
 registerKeys(); applySamsungSaver();
+$('inPill').innerHTML = G('inputs', 34)+'Entradas';
+if(hasTizen){ loadStorages(); try { tizen.filesystem.addStorageStateChangeListener(loadStorages); } catch(e){} }
 showPhoto(S.photo >= 0 ? S.photo : (photoDue() ? photoIdx + 1 : photoIdx), true);
 loadChannels();
 loadApps(build);

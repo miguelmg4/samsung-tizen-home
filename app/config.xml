@@ -2,7 +2,7 @@
 <widget xmlns="http://www.w3.org/ns/widgets"
         xmlns:tizen="http://tizen.org/ns/widgets"
         id="http://mi-inicio.local/home"
-        version="1.3.0"
+        version="1.4.0"
         viewmodes="maximized">
     <tizen:application id="MiInicioTV.Home"
                        package="MiInicioTV"
@@ -24,6 +24,8 @@
     <tizen:privilege name="http://tizen.org/privilege/tv.channel"/>
     <tizen:privilege name="http://tizen.org/privilege/tv.audio"/>
     <tizen:privilege name="http://tizen.org/privilege/internet"/>
+    <!-- Ver memorias USB conectadas (panel de Entradas) -->
+    <tizen:privilege name="http://tizen.org/privilege/filesystem.read"/>
 
     <tizen:privilege name="http://developer.samsung.com/privilege/productinfo"/>
     <!-- La tele la tiene cargada en segundo plano: se abre al instante -->
