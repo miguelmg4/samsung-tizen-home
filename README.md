@@ -122,7 +122,13 @@ TV_IP=192.168.1.50 bash debloat.sh apply ads,tracking,promo,alexa,smartthings
 TV_IP=192.168.1.50 bash debloat.sh restore           # reactiva lo desactivado
 ```
 
-Grupos: `ads`, `tracking`, `promo`, `alexa`, `health`, `smartthings`, `art`, `bixby` (solo lo exclusivo de Bixby; no probado con la búsqueda por voz de las apps), `applevideo` (app Apple TV) y `samsunghome` (extras del inicio de Samsung; solo si ya usaste `set-home.sh`). Reinicia la tele después de aplicar.
+Grupos: `ads`, `tracking`, `promo`, `alexa`, `health`, `smartthings`, `art`, `bixby` (⚠️ no lo uses si quieres buscar por voz: la búsqueda por voz de apps como YouTube necesita Bixby configurado), `applevideo` (app Apple TV) y `samsunghome` (extras del inicio de Samsung; solo si ya usaste `set-home.sh`). Reinicia la tele después de aplicar.
+
+## Si la búsqueda por voz no funciona
+
+1. **Empareja el mando por Bluetooth**: apúntalo a la tele desde menos de 30 cm y mantén pulsados **VOLVER** y **REPRODUCIR/PAUSA** 3-5 segundos. Sin emparejar, los botones funcionan por infrarrojos pero el micrófono no.
+2. En *Ajustes → General → Voz* elige **Bixby** y acepta sus condiciones (o Alexa, si no desactivaste el grupo `alexa`).
+3. Si usaste `debloat.sh` con el grupo `bixby`, reactívalo con `debloat.sh restore`.
 
 ## Limitaciones conocidas
 

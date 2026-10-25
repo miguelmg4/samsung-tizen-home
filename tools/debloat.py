@@ -73,7 +73,7 @@ GROUPS = {
         "org.tizen.art-app": "modo Arte",
         "com.samsung.tv.ambient-support": "modo Ambiente",
     },
-    # Solo partes exclusivas de Bixby (no se ha comprobado su efecto en la búsqueda por voz de las apps)
+    # ⚠️ Rompe la búsqueda por voz de las apps (necesita Bixby configurado). Solo si no usas la voz.
     "bixby": {
         "com.samsung.tv.farfieldvoice": "micro manos libres «Hi Bixby»",
         "com.samsung.tv.bixby-prov": "configuración de Bixby",
