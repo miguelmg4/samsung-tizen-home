@@ -18,8 +18,9 @@ Una pantalla de inicio limpia, rápida y personalizable para televisores Samsung
 - **Tiempo**: AEMET para ciudades españolas (sin clave) y Open-Meteo para el resto o en modo automático por IP.
 - **Panel de Ajustes** (OK en la píldora del tiempo y la hora, botón **rojo** o **azul**, o el icono de Ajustes): panel lateral de cristal con la hora y el tiempo, accesos rápidos (TV, consolas, silencio, salvapantallas, fondo, salvapantallas de Samsung, imagen y sonido), barra de volumen, memoria y ping de red en vivo, y todos los ajustes: salvapantallas, fondo, tiempo, apps visibles, puertos HDMI y accesos a los paneles de Samsung (imagen y sonido, red/wifi, Bluetooth).
 - **Panel de Entradas** (píldora «Entradas», a la izquierda de la del tiempo): sube desde abajo con todas las entradas de la tele (TV, HDMI…) y las memorias USB. Muestra el nombre del aparato si la tele lo detecta por HDMI-CEC (p. ej. «Xbox · HDMI 2») y cuáles tienen señal.
+- **Widgets** en el centro de la pantalla, en dos páginas: tiempo con previsión por horas y entradas con su estado de señal; control (volumen, silencio, imagen y sonido, ajustes) y sistema (memoria, ping, siguiente foto, salvapantallas). Se quitan en *Ajustes → Pantalla de inicio → Widgets*.
 - **Salvapantallas** en movimiento que protege el OLED (por defecto a los 30 minutos), con imágenes de la NASA de fondo casi negro que en OLED gastan menos, o paisajes. Mientras Mi Inicio está abierto, pide a la tele que no use el de Samsung.
-- **Ligera**: pensada para el Chromium 85 de Tizen 6.5; animaciones solo con `transform`/`opacity`.
+- **Ligera**: pensada para el Chromium 85 de Tizen 6.5; animaciones solo con `transform`/`opacity`. Con otra app delante suelta las fotos y para su monitor (en una tele de 2022 pasa de ~114 a ~70 MB), y el fondo difuminado solo existe con un panel abierto.
 
 ## Compatibilidad
 
@@ -73,7 +74,8 @@ Para actualizar tras cambiar algo, vuelve a ejecutar `./deploy.sh`.
 | Flechas / OK | Navegar / abrir |
 | Mantener OK o **amarillo** | Menú: abrir, editar pantalla de inicio, mover a la fila superior, ocultar |
 | **Rojo** / **Azul** | Panel de Ajustes |
-| ▲ en la fila superior | Píldoras «Entradas» y Ajustes (◀ ▶ para elegir) |
+| ▲ en la fila superior | Widgets (◀ ▶ para moverse y cambiar de página); otra vez ▲, píldoras «Entradas» y Ajustes |
+| ◀ ▶ en el volumen | Bajar / subir volumen (OK: silencio) |
 | VOLVER | Subir a la primera fila; en la primera fila, salvapantallas |
 
 En mandos sin teclas de colores (SolarCell), pulsa el botón **123** para ver el mando virtual con colores.
@@ -175,6 +177,7 @@ TV_IP=192.168.1.50 bash quickwins.sh clean     # borra los paquetes que deja cad
 
 - Herramientas de root y botón Home: [berteotti/custom-tv](https://github.com/berteotti/custom-tv) (MIT) y [chris-ritsen/samsung-tv-root](https://github.com/chris-ritsen/samsung-tv-root) (Unlicense).
 - Ajustes rápidos: ideas de [andrearicci93/vetro](https://github.com/andrearicci93/vetro) (MIT); la limpieza de paquetes viene de [Apps2Samsung](https://github.com/Apps2Samsung/Apps2Samsung) (MIT).
+- Widgets: idea de [0xProbabillity/luma-tv](https://github.com/0xProbabillity/luma-tv) (MIT).
 - Fotos: autores de [Unsplash](https://unsplash.com) (lista en [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)).
 - Tiempo: [AEMET](https://www.aemet.es) y [Open-Meteo](https://open-meteo.com).
 
