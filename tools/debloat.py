@@ -88,12 +88,12 @@ GROUPS = {
     "samsunghome": {
         "com.samsung.tv.home.media": "inicio de Samsung: pestaña de contenido (~100 MB)",
         "com.samsung.tv.home.sidebar": "inicio de Samsung: barra lateral (~40 MB)",
-        "com.samsung.tv.sboard-app": "inicio de Samsung: tablero",
     },
 }
 DEFAULT_GROUPS = "ads,tracking,promo"
 # Nunca se tocan: el sistema de voz general, HbbTV, cuentas, el núcleo del inicio de Samsung (csfs),
 # el visor de TV, TV Plus, Multi View, el navegador y el mando virtual (teclas de colores).
+# Tampoco com.samsung.tv.sboard-app: es el teclado en pantalla de todas las apps.
 
 
 def selected(arg):
