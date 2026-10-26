@@ -138,6 +138,18 @@ TV_IP=192.168.1.50 bash services.sh restore   # deshacer
 - El agente de anuncios, PISA y `canalysis` quedan **apagados para siempre**: Samsung incluye un interruptor (un archivo en `/opt/usr/share/systemd/system/`) que les impide arrancar.
 - El resto (reconocimiento de contenido, analítica de medios, `sp-kpi`, `kpi-logging`) solo se para **hasta el siguiente reinicio en frío** (desenchufar la tele); después hay que volver a lanzar `reapply`. Un reposo normal con el mando no los reactiva.
 
+### Ajustes rápidos: Multi View y paquetes sobrantes
+
+```sh
+TV_IP=192.168.1.50 bash quickwins.sh check     # solo lectura
+TV_IP=192.168.1.50 bash quickwins.sh apply     # Multi View sin precarga al arrancar
+TV_IP=192.168.1.50 bash quickwins.sh restore   # vuelve a precargarlo
+TV_IP=192.168.1.50 bash quickwins.sh clean     # borra los paquetes que deja cada instalación
+```
+
+- **Multi View sin precarga:** Samsung lo carga al encender aunque no lo uses (unos 70 MB en el modelo probado). Con `apply` deja de precargarse y se para; sigue funcionando al abrirlo, solo que la primera vez tarda algo más. En la S95B la RAM disponible pasó de 876 a 907 MB.
+- **Paquetes sobrantes:** la tele guarda una copia de cada `.wgt` que instalas y nunca la borra. `clean` borra solo esos archivos de paquete (`.wgt`, `.tpk`, `.rpm`) de la carpeta de instalación.
+
 ## Si la búsqueda por voz no funciona
 
 1. **Empareja el mando por Bluetooth**: apúntalo a la tele desde menos de 30 cm y mantén pulsados **VOLVER** y **REPRODUCIR/PAUSA** 3-5 segundos. Sin emparejar, los botones funcionan por infrarrojos pero el micrófono no.
@@ -162,6 +174,7 @@ TV_IP=192.168.1.50 bash services.sh restore   # deshacer
 ## Créditos
 
 - Herramientas de root y botón Home: [berteotti/custom-tv](https://github.com/berteotti/custom-tv) (MIT) y [chris-ritsen/samsung-tv-root](https://github.com/chris-ritsen/samsung-tv-root) (Unlicense).
+- Ajustes rápidos: ideas de [andrearicci93/vetro](https://github.com/andrearicci93/vetro) (MIT); la limpieza de paquetes viene de [Apps2Samsung](https://github.com/Apps2Samsung/Apps2Samsung) (MIT).
 - Fotos: autores de [Unsplash](https://unsplash.com) (lista en [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)).
 - Tiempo: [AEMET](https://www.aemet.es) y [Open-Meteo](https://open-meteo.com).
 
